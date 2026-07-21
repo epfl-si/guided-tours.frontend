@@ -1,3 +1,5 @@
+import type {UserType} from './types.tsx';
+
 interface ApiCallOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   headers?: Record<string, string>;
@@ -52,7 +54,7 @@ async function callExternalApi(
 export async function fetchConnectedUser(
   address: string | undefined,
   authToken: string | undefined
-): Promise<any> {
+): Promise<UserType> {
   const url = `${address}/api/user/me`;
 
   return await callExternalApi(url, {

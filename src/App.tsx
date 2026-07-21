@@ -29,15 +29,14 @@ export default function App() {
   }, [oidc.accessToken, oidc.state]);
 
   const loadFetch = async () => {
-    const results = await fetchConnectedUser(
-      import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
-      oidc.accessToken
-    );
-    if (results.status === 200 && results.data) {
-      console.log('ConnectedUser', results.data);
-      setConnectedUser(results.data);
-    } else {
-      console.log('ConnectedUser Error', results);
+    try {
+      const user = await fetchConnectedUser(
+        import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
+        oidc.accessToken
+      );
+      setConnectedUser(user);
+    } catch (error) {
+      console.log('ConnectedUser Error', error);
       oidc.logout();
     }
   };
