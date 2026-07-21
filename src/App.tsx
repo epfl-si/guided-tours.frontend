@@ -29,8 +29,8 @@ export default function App() {
         oidc.accessToken
       );
       setConnectedUser({
-        groups: data.user.groups,
-        username: data.user.gaspar,
+        groups: data.groups,
+        username: data.gaspar,
         isAdmin: true,
         isGuide: true
       });
