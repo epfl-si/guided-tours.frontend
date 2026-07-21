@@ -13,14 +13,8 @@ export default function App() {
     groups: [],
     username: '',
     isAdmin: false,
-    isReadOnly: false
+    isGuide: false,
   });
-  // const [connectedUser, setConnectedUser] = useState<UserType>({
-  //   groups: ["test"],
-  //   username: 'testuser',
-  //   isAdmin: true,
-  //   isReadOnly: false
-  // });
 
   useEffect(() => {
     if (oidc.state == StateEnum.LoggedIn) {
@@ -30,11 +24,16 @@ export default function App() {
 
   const loadFetch = async () => {
     try {
-      const user = await fetchConnectedUser(
+      const data = await fetchConnectedUser(
         import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
         oidc.accessToken
       );
-      setConnectedUser(user);
+      setConnectedUser({
+        groups: data.user.groups,
+        username: data.user.gaspar,
+        isAdmin: true,
+        isGuide: true
+      });
     } catch (error) {
       console.log('ConnectedUser Error', error);
       oidc.logout();
@@ -49,7 +48,7 @@ export default function App() {
             <Route path="/" element={<Page />} />
             <Route element={<RequireAuth oidc={oidc} />}>
               // All routes that here require authentication
-              <Route path="/backoffice" element={<Page />} />
+              <Route path="/admin" element={<Page />} />
             </Route>
           </Route>
         </Routes>

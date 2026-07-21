@@ -2,6 +2,7 @@ export type UserType = {
   groups: string[],
   username: string,
   isAdmin: boolean,
+  isGuide: boolean,
   image?: string,
   [key: string]: any
 }
