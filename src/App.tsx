@@ -10,6 +10,8 @@ import {fetchConnectedUser} from './lib/api';
 export default function App() {
   const oidc = useOpenIDConnectContext();
   const [connectedUser, setConnectedUser] = useState<UserType>({
+    firstName: '',
+    lastName: '',
     groups: [],
     username: '',
     isAdmin: false,
@@ -29,6 +31,8 @@ export default function App() {
         oidc.accessToken
       );
       setConnectedUser({
+        firstName: data.firstName,
+        lastName: data.lastName,
         groups: data.groups,
         username: data.gaspar,
         isAdmin: true,
