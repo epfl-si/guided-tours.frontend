@@ -1,0 +1,14 @@
+{
+  "header": {
+    "signIn": "Se connecter",
+    "signOut": "se déconnecter"
+  },
+  "footer": {
+    "sourceCode": "Source Code",
+    "rights": "Tous droits réservés",
+    "contact": "Contact"
+  },
+  "app": {
+    "title": "Visites guidées"
+  }
+}

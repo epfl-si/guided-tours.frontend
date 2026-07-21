@@ -3,6 +3,13 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "config": {
+    "appName": "Guided Tours EPFL",
+    "githubUrl": "https://github.com/epfl-si/guided-tours.dev",
+    "address": "",
+    "telephone": "021 693 1234",
+    "supportEmail": "1234@epfl.ch"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -13,13 +20,17 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@epfl-si/react-appauth": "^0.15.0",
     "@fontsource-variable/geist": "^5.2.9",
     "@tailwindcss/vite": "^4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "i18next-browser-languagedetector": "^8.2.1",
     "lucide-react": "^1.24.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-i18next": "^17.0.9",
+    "react-router": "^7.18.1",
     "shadcn": "^4.13.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4",
@@ -27,7 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10",
-    "@types/node": "^24",
+    "@types/node": "^24.13.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6",

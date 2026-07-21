@@ -1,21 +1,60 @@
-import { Button } from "@/components/ui/button"
+import {useEffect, useState} from 'react'
+import {StateEnum, useOpenIDConnectContext} from "@epfl-si/react-appauth";
+import {Layout} from "@/components/layout/Layout.tsx";
+import {BrowserRouter, Route, Routes} from "react-router";
+import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
+import type {UserType} from "@/lib/types.tsx";
+import Page from "@/components/pages/Page.tsx";
+import {fetchConnectedUser} from './lib/api';
 
-export function App() {
+export default function App() {
+  const oidc = useOpenIDConnectContext();
+  const [connectedUser, setConnectedUser] = useState<UserType>({
+    groups: [],
+    username: '',
+    isAdmin: false,
+    isReadOnly: false
+  });
+  // const [connectedUser, setConnectedUser] = useState<UserType>({
+  //   groups: ["test"],
+  //   username: 'testuser',
+  //   isAdmin: true,
+  //   isReadOnly: false
+  // });
+
+  useEffect(() => {
+    if (oidc.state == StateEnum.LoggedIn) {
+      loadFetch();
+    }
+  }, [oidc.accessToken, oidc.state]);
+
+  const loadFetch = async () => {
+    const results = await fetchConnectedUser(
+      import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
+      oidc.accessToken
+    );
+    if (results.status === 200 && results.data) {
+      console.log('ConnectedUser', results.data);
+      setConnectedUser(results.data);
+    } else {
+      console.log('ConnectedUser Error', results);
+      oidc.logout();
+    }
+  };
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
-  )
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout user={connectedUser} oidc={oidc} />}>
+            <Route path="/" element={<Page />} />
+            <Route element={<RequireAuth oidc={oidc} />}>
+              // All routes that here require authentication
+              <Route path="/backoffice" element={<Page />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
-
-export default App
