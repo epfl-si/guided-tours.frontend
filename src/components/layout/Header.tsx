@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin, onLogout }) => {
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onSelect={onLogout} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
+                  <DropdownMenuItem onClick={onLogout} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50">
                     {t('header.signOut')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
