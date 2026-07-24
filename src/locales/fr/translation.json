@@ -10,5 +10,53 @@
   },
   "app": {
     "title": "Visites guidées"
+  },
+  "registration": {
+    "organizerName": {
+      "label": "Nom de l'organisateur ou de l'organisatrice",
+      "firstNamePlaceholder": "Prénom",
+      "lastNamePlaceholder": "Nom"
+    },
+    "company": {
+      "label": "Entreprise"
+    },
+    "email": {
+      "label": "Email"
+    },
+    "phone": {
+      "label": "Téléphone"
+    },
+    "address": {
+      "label": "Adresse",
+      "addressPlaceholder": "Adresse",
+      "complementPlaceholder": "Complément d'adresse",
+      "cityPlaceholder": "Ville",
+      "regionPlaceholder": "Canton / Province / Région",
+      "postalCodePlaceholder": "Code postal"
+    },
+    "date": {
+      "label": "Date souhaitée de la visite guidée",
+      "hint": "Réservation obligatoire minimum 7 jours ouvrables avant la visite",
+      "tooSoon": "La date choisie doit être au moins {{maxTime}} jours ouvrables à partir de maintenant."
+    },
+    "participants": {
+      "label": "Nombre de participantes et de participants"
+    },
+    "language": {
+      "label": "Langue",
+      "french": "Français",
+      "english": "Anglais"
+    },
+    "comments": {
+      "label": "Commentaires"
+    },
+    "gdpr": {
+      "label": "Accord GDPR",
+      "consent": "Je consens à ce que ce site Web stocke les informations que j'ai fournies afin de pouvoir répondre à ma demande.",
+      "hint": "Pour plus d'informations, visitez https://go.epfl.ch/gpdr/."
+    },
+    "submit": "Envoyer",
+    "submitSuccess": "Votre inscription a bien été envoyée.",
+    "submitError": "Une erreur est survenue lors de l'envoi de votre inscription. Veuillez réessayer."
   }
 }

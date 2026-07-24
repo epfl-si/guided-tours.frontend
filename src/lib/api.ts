@@ -61,3 +61,37 @@ export async function fetchConnectedUser(
     bearerToken: authToken || ''
   });
 }
+
+export async function postRegistration(
+  address: string | undefined,
+  authToken: string | undefined,
+  data: Record<string, any>
+): Promise<UserType> {
+  const url = `${address}/visite/register`;
+  if (!data) {
+    throw new Error('Data is required to post registration');
+  }
+  return await callExternalApi(url, {
+    bearerToken: authToken,
+    method: 'POST',
+    body: {
+      data
+    }
+  });
+}
+
+export async function fetchVisitTitle(
+  address: string | undefined,
+  authToken: string | undefined,
+  idVisit: string | undefined
+): Promise<UserType> {
+  const url = `${address}/api/visit/${idVisit}/details`;
+  if (!idVisit) {
+    throw new Error('idVisit is required to fetch visit title');
+  }
+
+  return await callExternalApi(url, {
+    bearerToken: authToken,
+    method: 'GET',
+  });
+}

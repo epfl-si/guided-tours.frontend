@@ -6,6 +6,7 @@ import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
 import type {UserType} from "@/lib/types.tsx";
 import Page from "@/components/pages/Page.tsx";
 import {fetchConnectedUser} from './lib/api';
+import Registration from './components/pages/registration';
 
 export default function App() {
   const oidc = useOpenIDConnectContext();
@@ -50,6 +51,8 @@ export default function App() {
         <Routes>
           <Route element={<Layout user={connectedUser} oidc={oidc} />}>
             <Route path="/" element={<Page />} />
+            <Route path="/:idVisit/registration" element={<Registration user={connectedUser} oidc={oidc} />} />
+            <Route path="/:idVisit/inscription" element={<Registration user={connectedUser} oidc={oidc} />} />
             <Route element={<RequireAuth oidc={oidc} />}>
               // All routes that here require authentication
               <Route path="/admin" element={<Page />} />
