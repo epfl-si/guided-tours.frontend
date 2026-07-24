@@ -67,7 +67,7 @@ export async function postRegistration(
   authToken: string | undefined,
   data: Record<string, any>
 ): Promise<UserType> {
-  const url = `${address}/visite/register`;
+  const url = `${address}/api/visite/register`;
   if (!data) {
     throw new Error('Data is required to post registration');
   }
