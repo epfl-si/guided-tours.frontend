@@ -2,11 +2,12 @@ import {useEffect, useState} from 'react'
 import {StateEnum, useOpenIDConnectContext} from "@epfl-si/react-appauth";
 import {Layout} from "@/components/layout/Layout.tsx";
 import {BrowserRouter, Route, Routes} from "react-router";
-import {RequireAuth} from "@/components/auth/RequireAuth.tsx";
 import type {UserType} from "@/lib/types.tsx";
 import Page from "@/components/pages/Page.tsx";
 import {fetchConnectedUser} from './lib/api';
 import Registration from './components/pages/registration';
+import Admin from './components/pages/admin';
+import { RequireAdmin } from './components/auth/RequireAdmin';
 
 export default function App() {
   const oidc = useOpenIDConnectContext();
@@ -53,9 +54,9 @@ export default function App() {
             <Route path="/" element={<Page />} />
             <Route path="/:placeId/register" element={<Registration user={connectedUser} oidc={oidc} />} />
             <Route path="/:placeId/inscription" element={<Registration user={connectedUser} oidc={oidc} />} />
-            <Route element={<RequireAuth oidc={oidc} />}>
+            <Route element={<RequireAdmin user={connectedUser} />}>
               // All routes that here require authentication
-              <Route path="/admin" element={<Page />} />
+              <Route path="/admin" element={<Admin />} />
             </Route>
           </Route>
         </Routes>
