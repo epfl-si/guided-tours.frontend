@@ -18,7 +18,7 @@
       "lastNamePlaceholder": "Last name"
     },
     "company": {
-      "label": "Company"
+      "label": "company"
     },
     "email": {
       "label": "Email"

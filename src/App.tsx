@@ -51,8 +51,8 @@ export default function App() {
         <Routes>
           <Route element={<Layout user={connectedUser} oidc={oidc} />}>
             <Route path="/" element={<Page />} />
-            <Route path="/:idVisit/registration" element={<Registration user={connectedUser} oidc={oidc} />} />
-            <Route path="/:idVisit/inscription" element={<Registration user={connectedUser} oidc={oidc} />} />
+            <Route path="/:placeId/register" element={<Registration user={connectedUser} oidc={oidc} />} />
+            <Route path="/:placeId/inscription" element={<Registration user={connectedUser} oidc={oidc} />} />
             <Route element={<RequireAuth oidc={oidc} />}>
               // All routes that here require authentication
               <Route path="/admin" element={<Page />} />

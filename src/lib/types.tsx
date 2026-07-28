@@ -22,15 +22,34 @@ export type RegistrationFormType = {
   email: string,
   phone: string,
   address: string,
-  addressComplement: string,
+  additionnalAddress: string,
   city: string,
   region: string,
-  postalCode: string,
+  zip: string,
   country: string,
   visitDate: string,
   visitTime: string,
-  numberOfParticipants: string,
-  language: string,
+  numberOfParticipant: number,
+  languageId: number,
   comments: string,
   gdprConsent: boolean,
 }
+
+type Translated = {
+  [langCode: string]: string;
+};
+
+export type PlaceInformationType = {
+  id: number;
+  title: Translated;
+  picture: string;
+  description: Translated;
+  createdAt: Date;
+  maxPerGroup: number;
+  price: number;
+  conditions: Translated;
+  Languages: {
+    id: number;
+    name: string;
+  }[];
+};

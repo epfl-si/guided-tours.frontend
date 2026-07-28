@@ -1,4 +1,4 @@
-import type {UserType} from './types.tsx';
+import type { UserType } from './types.tsx';
 
 interface ApiCallOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -14,7 +14,7 @@ interface ApiCallOptions {
 async function callExternalApi(
   url: string,
   options: ApiCallOptions = {}
-){
+) {
   const method = options.method || 'GET';
   const headers = new Headers(options.headers);
 
@@ -64,15 +64,13 @@ export async function fetchConnectedUser(
 
 export async function postRegistration(
   address: string | undefined,
-  authToken: string | undefined,
   data: Record<string, any>
 ): Promise<UserType> {
-  const url = `${address}/api/visite/register`;
+  const url = `${address}/api/visit/register`;
   if (!data) {
     throw new Error('Data is required to post registration');
   }
   return await callExternalApi(url, {
-    bearerToken: authToken,
     method: 'POST',
     body: {
       data
@@ -83,11 +81,11 @@ export async function postRegistration(
 export async function fetchVisitTitle(
   address: string | undefined,
   authToken: string | undefined,
-  idVisit: string | undefined
-): Promise<UserType> {
-  const url = `${address}/api/visit/${idVisit}/details`;
-  if (!idVisit) {
-    throw new Error('idVisit is required to fetch visit title');
+  placeId: number | undefined
+): Promise<string> {
+  const url = `${address}/api/visit/${placeId}/details`;
+  if (!placeId) {
+    throw new Error('placeId is required to fetch visit title');
   }
 
   return await callExternalApi(url, {

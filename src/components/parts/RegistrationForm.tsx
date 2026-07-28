@@ -12,12 +12,34 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { useState, useEffect, useMemo, type SubmitEvent } from "react";
-import type { RegistrationFormType } from "@/lib/types";
-import countryList from 'react-select-country-list'
+import { useState, useEffect, useMemo, type FormEvent } from "react";
+import type { PlaceInformationType, RegistrationFormType } from "@/lib/types";
+import countryList from "react-select-country-list";
 import { postRegistration } from "@/lib/api";
-import type {UserType} from "@/lib/types.tsx";
-import type {State} from "@epfl-si/react-appauth";
+
+const LOCAL_STORAGE_KEY = "registrationFormData";
+
+// Business-day calculation shared logic (kept in sync with backend's
+// isAtLeast7BusinessDaysBefore). If you can, extract this into a shared
+// package so front and back never drift apart again.
+const MIN_BUSINESS_DAYS = 7;
+
+function countBusinessDaysBetween(from: Date, to: Date): number {
+  let count = 0;
+  const cursor = new Date(from);
+  cursor.setHours(0, 0, 0, 0);
+  const end = new Date(to);
+  end.setHours(0, 0, 0, 0);
+
+  while (cursor < end) {
+    cursor.setDate(cursor.getDate() + 1);
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) {
+      count++;
+    }
+  }
+  return count;
+}
 
 const initialFormData: RegistrationFormType = {
   firstName: "",
@@ -26,22 +48,27 @@ const initialFormData: RegistrationFormType = {
   email: "",
   phone: "",
   address: "",
-  addressComplement: "",
+  additionnalAddress: "",
   city: "",
   region: "",
-  postalCode: "",
+  zip: "",
   country: "CH",
   visitDate: "",
   visitTime: "",
-  numberOfParticipants: "1",
-  language: "fr",
+  numberOfParticipant: 1,
+  languageId: 0,
   comments: "",
   gdprConsent: false,
 };
 
-export default function RegistrationForm({ user, oidc, idVisit }: { user: UserType, oidc: State, idVisit: string }) {
+export default function RegistrationForm({
+  information,
+}: {
+  information: PlaceInformationType;
+}) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<RegistrationFormType>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const countryOptions = useMemo(() => countryList().getData(), []);
 
   function updateField<K extends keyof RegistrationFormType>(
@@ -50,56 +77,96 @@ export default function RegistrationForm({ user, oidc, idVisit }: { user: UserTy
   ) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
-  const checkDate = (date: string, time: string, maxTime: number) => {
+
+  const checkDate = (date: string, time: string, minBusinessDays: number) => {
     const selectedDateTime = new Date(`${date}T${time}`);
-    const diffInDays = (selectedDateTime.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
-    if (diffInDays < maxTime) {
-      alert(t("registration.date.tooSoon", { maxTime }));
+    if (Number.isNaN(selectedDateTime.getTime())) {
+      alert(t("registration.date.invalid"));
+      return false;
+    }
+    const businessDays = countBusinessDaysBetween(new Date(), selectedDateTime);
+    if (businessDays < minBusinessDays) {
+      alert(t("registration.date.tooSoon", { maxTime: minBusinessDays }));
       return false;
     }
     return true;
-  }
+  };
 
   useEffect(() => {
-    const savedFormData = localStorage.getItem("registrationFormData");
+    const savedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedFormData) {
       try {
         setFormData(JSON.parse(savedFormData));
       } catch {
-        localStorage.removeItem("registrationFormData");
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
       }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("registrationFormData", JSON.stringify(formData));
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
 
-  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!formData.gdprConsent) {
       alert(t("registration.gdpr.consentRequired"));
       return;
-    } else if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.visitDate || !formData.visitTime || !formData.numberOfParticipants || !formData.language || !formData.country || !formData.city || !formData.postalCode || !formData.address) {
+    }
+
+    const requiredStringFields: (keyof RegistrationFormType)[] = [
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "visitDate",
+      "visitTime",
+      "numberOfParticipant",
+      "country",
+      "city",
+      "region",
+      "zip",
+      "address",
+    ];
+    const hasMissingField =
+      requiredStringFields.some((field) => !formData[field]) || formData.languageId === 0;
+    if (hasMissingField) {
       alert(t("registration.requiredFieldsMissing"));
       return;
     }
-    // Max time is 7 days from now
-    if (!checkDate(formData.visitDate, formData.visitTime, 7)) {
+
+    if (!checkDate(formData.visitDate, formData.visitTime, MIN_BUSINESS_DAYS)) {
       return;
     }
+
     const timeStampDate = new Date(`${formData.visitDate}T${formData.visitTime}`).getTime();
-    const formDataToSubmit = { ...formData, visitTimeStampDate: timeStampDate, idVisit: idVisit };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { visitTime, numberOfParticipant, ...rest } = formData;
+    // Backend expects `numberOfParticipant` (singular) — see reservations schema.
+    // Mapped here rather than renaming the front-end type.
+    const formDataToSubmit = {
+      ...rest,
+      visitDate: timeStampDate,
+      placeId: information.id,
+      zip: Number(formData.zip),
+      numberOfParticipant: Number(formData.numberOfParticipant),
+    };
+
+    setIsSubmitting(true);
     try {
       await postRegistration(
         import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
-        oidc.accessToken,
         formDataToSubmit
       );
       alert(t("registration.submitSuccess"));
+      setFormData(initialFormData);
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
     } catch (error) {
-      console.error("Registration submission failed", error);
+      console.error("Registration submission failed: ", error);
       alert(t("registration.submitError"));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -170,26 +237,29 @@ export default function RegistrationForm({ user, oidc, idVisit }: { user: UserTy
         />
         <Input
           placeholder={t("registration.address.complementPlaceholder")}
-          value={formData.addressComplement}
-          onChange={(e) => updateField("addressComplement", e.target.value)}
+          value={formData.additionnalAddress}
+          onChange={(e) => updateField("additionnalAddress", e.target.value)}
         />
         <div className="grid grid-cols-2 gap-3">
           <Input
             placeholder={t("registration.address.cityPlaceholder")}
             value={formData.city}
             onChange={(e) => updateField("city", e.target.value)}
+            required
           />
           <Input
             placeholder={t("registration.address.regionPlaceholder")}
             value={formData.region}
             onChange={(e) => updateField("region", e.target.value)}
+            required
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <Input
             placeholder={t("registration.address.postalCodePlaceholder")}
-            value={formData.postalCode}
-            onChange={(e) => updateField("postalCode", e.target.value)}
+            value={formData.zip}
+            onChange={(e) => updateField("zip", e.target.value)}
+            required
           />
           <Select
             value={formData.country}
@@ -237,9 +307,9 @@ export default function RegistrationForm({ user, oidc, idVisit }: { user: UserTy
           {t("registration.participants.label")} <span className="text-destructive">*</span>
         </Label>
         <Select
-          value={formData.numberOfParticipants}
+          value={formData.numberOfParticipant}
           onValueChange={(value) => {
-            if (value !== null) updateField("numberOfParticipants", value);
+            if (value !== null) updateField("numberOfParticipant", value);
           }}
         >
           <SelectTrigger className="w-full">
@@ -260,16 +330,15 @@ export default function RegistrationForm({ user, oidc, idVisit }: { user: UserTy
           {t("registration.language.label")} <span className="text-destructive">*</span>
         </Label>
         <RadioGroup
-          value={formData.language}
-          onValueChange={(value) => updateField("language", value)}
+          value={String(formData.languageId)}
+          onValueChange={(value) => updateField("languageId", Number(value))}
           className="grid-flow-col justify-start gap-8"
         >
-          <Label className="font-normal">
-            <RadioGroupItem value="fr" /> {t("registration.language.french")}
-          </Label>
-          <Label className="font-normal">
-            <RadioGroupItem value="en" /> {t("registration.language.english")}
-          </Label>
+          {information.Languages.map((l: { id: number; name: string }) => (
+            <Label className="font-normal" key={l.id}>
+              <RadioGroupItem value={String(l.id)} /> {l.name}
+            </Label>
+          ))}
         </RadioGroup>
       </div>
 
@@ -296,8 +365,8 @@ export default function RegistrationForm({ user, oidc, idVisit }: { user: UserTy
         <p className="text-sm text-muted-foreground">{t("registration.gdpr.hint")}</p>
       </div>
 
-      <Button type="submit" className="self-start">
-        {t("registration.submit")}
+      <Button type="submit" className="self-start" disabled={isSubmitting}>
+        {isSubmitting ? t("registration.submitting") : t("registration.submit")}
       </Button>
     </form>
   );
