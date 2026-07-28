@@ -12,6 +12,11 @@
     "title": "Visites guidées"
   },
   "registration": {
+    "condition": {
+      "label": "Condition",
+      "plural": "Conditions",
+      "null": "Aucune condition"
+    },
     "organizerName": {
       "label": "Nom de l'organisateur ou de l'organisatrice",
       "firstNamePlaceholder": "Prénom",

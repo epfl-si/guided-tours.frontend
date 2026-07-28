@@ -39,6 +39,9 @@ type Translated = {
   [langCode: string]: string;
 };
 
+type Conditions = {
+  [langCode: string]: [string];
+};
 export type PlaceInformationType = {
   id: number;
   title: Translated;
@@ -47,7 +50,7 @@ export type PlaceInformationType = {
   createdAt: Date;
   maxPerGroup: number;
   price: number;
-  conditions: Translated;
+  conditions: Conditions;
   Languages: {
     id: number;
     name: string;

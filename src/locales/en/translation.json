@@ -12,13 +12,17 @@
     "title": "Guided Tours"
   },
   "registration": {
+    "condition": {
+      "label": "Condition",
+      "plural": "Conditions"
+    },
     "organizerName": {
       "label": "Organizer's name",
       "firstNamePlaceholder": "First name",
       "lastNamePlaceholder": "Last name"
     },
     "company": {
-      "label": "company"
+      "label": "Company"
     },
     "email": {
       "label": "Email"
