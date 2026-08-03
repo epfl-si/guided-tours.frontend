@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { StateEnum, useOpenIDConnectContext } from "@epfl-si/react-appauth";
-import { Layout } from "@/components/layout/Layout.tsx";
+import { Layout } from "@/components/Layout.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import type { UserType } from "@/types/user";
-import Page from "@/components/pages/Page.tsx";
-import { fetchConnectedUser } from './lib/api';
-import Registration from './components/pages/registration';
-import Admin from './components/pages/admin';
-import { RequireAdmin } from './components/auth/RequireAdmin';
+import Page from "@/pages/Page.tsx";
+import { fetchConnectedUser } from '@/lib/api';
+import Registration from '@/pages/registration';
+import Admin from '@/pages/admin';
+import { RequireAdmin } from '@/auth/RequireAdmin';
 
 export default function App() {
   const oidc = useOpenIDConnectContext();

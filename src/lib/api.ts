@@ -1,4 +1,4 @@
-import type { UserType } from './types.tsx';
+import type { UserType } from '@/types/user';
 
 interface ApiCallOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';

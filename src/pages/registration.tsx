@@ -1,6 +1,7 @@
-import RegistrationForm from '@/components/parts/RegistrationForm';
+import RegistrationForm from '@/components/registration/form';
 import { useParams } from 'react-router';
-import type {PlaceInformationType, UserType} from "@/lib/types.tsx";
+import type { UserType } from "@/types/user";
+import type { PlaceInformationType } from "@/types/register"
 import type {State} from "@epfl-si/react-appauth";
 import { useState,useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,10 +40,9 @@ export default function Registration({ user: _user, oidc:_oidc }: { user: UserTy
   if (!placeIdString || !visitInformation) {
     return null;
   }
-  const lengthOfCondition:number = visitInformation.conditions[currentLanguage].length 
-  const pluralHandlingCondition = lengthOfCondition == 1 ? "registration.condition.label":"registration.condition.plural" 
+  const lengthOfCondition:number = visitInformation.conditions[currentLanguage].length
+  const pluralHandlingCondition = lengthOfCondition == 1 ? "registration.condition.label":"registration.condition.plural"
 
-  
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-4xl font-bold">{visitInformation?.title[currentLanguage]}</h1>

@@ -1,4 +1,4 @@
-import type { UserType } from "./user";
+import type { UserType } from "@/types/user";
 
 export type FetchUserType = {
   status?: number;

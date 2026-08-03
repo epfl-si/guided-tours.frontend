@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useMemo, type FormEvent } from "react";
-import type { PlaceInformationType, RegistrationFormType } from "@/lib/types";
+import type { PlaceInformationType, RegistrationFormType } from "@/types/register";
 import countryList from "react-select-country-list";
 import { postRegistration } from "@/lib/api";
 

@@ -1,5 +1,5 @@
 import type React from "react";
-import {config, version} from '../../../package.json';
+import { config, version } from '../../package.json';
 import { useTranslation } from 'react-i18next';
 
 export const Footer: React.FC = () => {
