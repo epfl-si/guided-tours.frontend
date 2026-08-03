@@ -1,10 +1,10 @@
-import {useEffect, useState} from 'react'
-import {StateEnum, useOpenIDConnectContext} from "@epfl-si/react-appauth";
-import {Layout} from "@/components/layout/Layout.tsx";
-import {BrowserRouter, Route, Routes} from "react-router";
-import type {UserType} from "@/lib/types.tsx";
+import { useEffect, useState } from 'react'
+import { StateEnum, useOpenIDConnectContext } from "@epfl-si/react-appauth";
+import { Layout } from "@/components/layout/Layout.tsx";
+import { BrowserRouter, Route, Routes } from "react-router";
+import type { UserType } from "@/types/user";
 import Page from "@/components/pages/Page.tsx";
-import {fetchConnectedUser} from './lib/api';
+import { fetchConnectedUser } from './lib/api';
 import Registration from './components/pages/registration';
 import Admin from './components/pages/admin';
 import { RequireAdmin } from './components/auth/RequireAdmin';
@@ -37,8 +37,8 @@ export default function App() {
         lastName: data.lastName,
         groups: data.groups,
         username: data.gaspar,
-        isAdmin: true,
-        isGuide: true
+        isAdmin: data.isAdmin,
+        isGuide: data.isGuide,
       });
     } catch (error) {
       console.log('ConnectedUser Error', error);
