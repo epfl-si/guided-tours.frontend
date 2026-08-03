@@ -1,4 +1,4 @@
-import RegistrationForm from '@/components/parts/RegistrationForm';
+import RegistrationForm from '@/components/registration/form';
 import { useParams } from 'react-router';
 import type { UserType } from "@/types/user";
 import type { PlaceInformationType } from "@/types/register"

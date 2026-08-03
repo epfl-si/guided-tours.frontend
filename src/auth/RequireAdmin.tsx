@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import type { UserType } from "@/types/user";
-import { LoadingPage } from "../pages/Loading";
+import { LoadingPage } from "@/pages/Loading";
 
 export const RequireAdmin = ({ user }: { user: UserType }) => {
   if (!user.username) {

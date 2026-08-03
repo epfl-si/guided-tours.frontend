@@ -1,5 +1,5 @@
 import type { Reservation } from "@/types/reservation"
-import { ReservationsTable } from "../reservations/tables";
+import { ReservationsTable } from "@/components/reservations/tables";
 
 export default function Admin() {
 
