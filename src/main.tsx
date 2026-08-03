@@ -1,5 +1,5 @@
 import {createRoot} from 'react-dom/client'
-import '@/global.css'
+import '@/index.css'
 import App from '@/App'
 import {LocalStorageBackend, OIDCContext} from "@epfl-si/react-appauth";
 import '@/lib/i18n';
