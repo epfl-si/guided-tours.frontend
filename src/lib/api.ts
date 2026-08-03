@@ -83,7 +83,7 @@ export async function fetchVisitTitle(
   authToken: string | undefined,
   placeId: number | undefined
 ): Promise<string> {
-  const url = `${address}/api/visit/${placeId}/details`;
+  const url = `${address}/api/place/${placeId}`;
   if (!placeId) {
     throw new Error('placeId is required to fetch visit title');
   }
