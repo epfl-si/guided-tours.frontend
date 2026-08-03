@@ -1,8 +1,8 @@
-import {Header} from "@/components/layout/Header.tsx";
-import {Footer} from "@/components/layout/Footer.tsx";
-import {Outlet} from "react-router";
-import type {UserType} from "@/lib/types.tsx";
-import type {State} from "@epfl-si/react-appauth";
+import { Header } from "@/components/layout/Header.tsx";
+import { Footer } from "@/components/layout/Footer.tsx";
+import { Outlet } from "react-router";
+import type { UserType } from "@/types/user";
+import type { State } from "@epfl-si/react-appauth";
 
 export const Layout = ({ user, oidc }: { user: UserType, oidc: State }) => {
 

@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import type {UserType} from "@/lib/types.tsx";
+import type { UserType } from "@/types/user";
 import { useTranslation } from 'react-i18next';
 import { LanguageSelector } from "@/components/language-selector";
 
