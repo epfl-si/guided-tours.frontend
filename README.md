@@ -1,21 +1,23 @@
-# React + TypeScript + Vite + shadcn/ui
+# Guided tours frontend
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+This repository contains the frontend of guided tours.
 
-## Adding components
+## Getting Started
+```sh
+npm install
+cp .env.example .env
 
-To add components to your app, run the following command:
-
-```bash
-npx shadcn@latest add button
+npm run dev
 ```
+Open [http://localhost:5173](http://localhost:5173).
 
-This will place the ui components in the `src/components` directory.
+## Scripts
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
-```
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run lint` | Run linter |
+| `npm run format` | Auto-format with prettier |
+| `npm run typecheck` | Check type |
+| `npm run preview` | Run production server for testing |
