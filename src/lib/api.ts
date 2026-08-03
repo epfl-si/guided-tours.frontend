@@ -66,15 +66,13 @@ export async function postRegistration(
   address: string | undefined,
   data: Record<string, any>
 ): Promise<UserType> {
-  const url = `${address}/api/visit/register`;
+  const url = `${address}/api/reservation/register`;
   if (!data) {
     throw new Error('Data is required to post registration');
   }
   return await callExternalApi(url, {
     method: 'POST',
-    body: {
-      data
-    }
+    body: data
   });
 }
 
