@@ -8,6 +8,7 @@ import { fetchConnectedUser } from '@/services/auth';
 import Registration from '@/pages/registration';
 import Admin from '@/pages/admin';
 import { RequireAdmin } from '@/auth/RequireAdmin';
+import { setGlobalAccessToken } from '@/lib/api';
 
 export default function App() {
   const oidc = useOpenIDConnectContext();
@@ -21,8 +22,12 @@ export default function App() {
   });
 
   useEffect(() => {
-    if (oidc.state == StateEnum.LoggedIn) {
+    if (oidc.state === StateEnum.LoggedIn && oidc.accessToken) {
+      setGlobalAccessToken(oidc.accessToken);
       loadFetch();
+
+    } else if (oidc.state !== StateEnum.LoggedIn) {
+      setGlobalAccessToken(null);
     }
   }, [oidc.accessToken, oidc.state]);
 
