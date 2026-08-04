@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useState, useEffect, useMemo, type FormEvent } from "react";
 import type { PlaceInformationType, RegistrationFormType } from "@/types/register";
 import countryList from "react-select-country-list";
-import { postRegistration } from "@/lib/api";
+import { postRegistration } from "@/services/reservation";
 
 const LOCAL_STORAGE_KEY = "registrationFormData";
 

@@ -1,22 +1,24 @@
-import type { UserType } from '@/types/user';
+let globalAccessToken: string | null = null;
+
+export function setGlobalAccessToken(token: string | null) {
+  globalAccessToken = token;
+};
 
 interface ApiCallOptions {
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  headers?: Record<string, string>;
-  body?: Record<string, any>;
-  bearerToken?: string;
-  basicAuth?: {
-    username: string;
-    password?: string;
-  };
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: HeadersInit;
+  body?: unknown;
 }
 
-async function callExternalApi(
-  url: string,
+const BASE_URL = import.meta.env.VITE_GUIDED_TOURS_BACKEND_URL || 'http://localhost:3000';
+
+export async function apiCall<T>(
+  endpoint: string,
   options: ApiCallOptions = {}
-) {
+): Promise<T> {
   const method = options.method || 'GET';
   const headers = new Headers(options.headers);
+  const url = `${BASE_URL}${endpoint}`
 
   if (!headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
@@ -25,13 +27,8 @@ async function callExternalApi(
     headers.set('Accept', 'application/json');
   }
 
-  if (!headers.has('Authorization')) {
-    if (options.bearerToken) {
-      headers.set('Authorization', `Bearer ${options.bearerToken}`);
-    } else if (options.basicAuth) {
-      const authString = btoa(`${options.basicAuth.username}:${options.basicAuth.password || ''}`);
-      headers.set('Authorization', `Basic ${authString}`);
-    }
+  if (globalAccessToken && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${globalAccessToken}`);
   }
 
   const fetchOptions: RequestInit = {
@@ -39,7 +36,7 @@ async function callExternalApi(
     headers,
   };
 
-  if (options.body && ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) {
+  if (options.body && ['POST', 'PUT'].includes(method.toUpperCase())) {
     fetchOptions.body = JSON.stringify(options.body);
   }
 
@@ -47,47 +44,6 @@ async function callExternalApi(
   if (response.ok) {
     return await response.json();
   } else {
-    throw new Error(`Failed to fetch external API: ${url} (${response.status})`);
+    throw new Error(`Failed to fetch backend API: ${url} (${response.status})`);
   }
-}
-
-export async function fetchConnectedUser(
-  address: string | undefined,
-  authToken: string | undefined
-): Promise<UserType> {
-  const url = `${address}/api/user/me`;
-
-  return await callExternalApi(url, {
-    bearerToken: authToken || ''
-  });
-}
-
-export async function postRegistration(
-  address: string | undefined,
-  data: Record<string, any>
-): Promise<UserType> {
-  const url = `${address}/api/reservation/register`;
-  if (!data) {
-    throw new Error('Data is required to post registration');
-  }
-  return await callExternalApi(url, {
-    method: 'POST',
-    body: data
-  });
-}
-
-export async function fetchVisitTitle(
-  address: string | undefined,
-  authToken: string | undefined,
-  placeId: number | undefined
-): Promise<string> {
-  const url = `${address}/api/place/${placeId}`;
-  if (!placeId) {
-    throw new Error('placeId is required to fetch visit title');
-  }
-
-  return await callExternalApi(url, {
-    bearerToken: authToken,
-    method: 'GET',
-  });
 }

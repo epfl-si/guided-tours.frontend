@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout.tsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 import type { UserType } from "@/types/user";
 import Page from "@/pages/Page.tsx";
-import { fetchConnectedUser } from '@/lib/api';
+import { fetchConnectedUser } from '@/services/auth';
 import Registration from '@/pages/registration';
 import Admin from '@/pages/admin';
 import { RequireAdmin } from '@/auth/RequireAdmin';
@@ -28,10 +28,7 @@ export default function App() {
 
   const loadFetch = async () => {
     try {
-      const data = await fetchConnectedUser(
-        import.meta.env.GUIDED_TOURS_BACKEND_URL,
-        oidc.accessToken
-      );
+      const data = await fetchConnectedUser();
       setConnectedUser({
         firstName: data.firstName,
         lastName: data.lastName,
