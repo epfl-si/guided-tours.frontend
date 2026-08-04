@@ -29,7 +29,7 @@ export default function App() {
   const loadFetch = async () => {
     try {
       const data = await fetchConnectedUser(
-        import.meta.env.GUIDED_TOURS_REACT_APP_BACKEND_ENDPOINT_URL,
+        import.meta.env.GUIDED_TOURS_BACKEND_URL,
         oidc.accessToken
       );
       setConnectedUser({
