@@ -1,3 +1,5 @@
+import type { Status } from "@/types/status";
+
 export type Reservation = {
   id: number;
   firstName: string;
@@ -18,4 +20,12 @@ export type Reservation = {
   statusId: number;
   languageId: number;
   placeId: number;
+}
+
+export type LastReservation = {
+  id: number;
+  company: string;
+  email: string;
+  visitDate: Date;
+  status: Status
 }

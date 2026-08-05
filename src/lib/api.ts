@@ -10,7 +10,7 @@ interface ApiCallOptions {
   body?: unknown;
 }
 
-const BASE_URL = import.meta.env.VITE_GUIDED_TOURS_BACKEND_URL || 'http://localhost:3000';
+const BASE_URL = import.meta.env.VITE_GUIDED_TOURS_BACKEND_URL || 'http://localhost:3000/api/';
 
 export async function apiCall<T>(
   endpoint: string,

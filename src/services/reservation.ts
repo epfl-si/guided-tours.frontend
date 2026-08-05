@@ -1,4 +1,5 @@
 import { apiCall } from "@/lib/api";
+import type { LastReservation } from "@/types/reservation";
 
 export async function postRegistration(
   data: Record<string, any>
@@ -11,4 +12,10 @@ export async function postRegistration(
     method: 'POST',
     body: data
   });
+}
+
+export async function getLastReservations() {
+  return await apiCall<LastReservation[]>('reservation/last', {
+    method: 'GET',
+  })
 }
