@@ -31,7 +31,7 @@ export const LastReservationsTable = ({ lastReservations }: { lastReservations: 
                 {reservation.company}
               </TableCell>
               <TableCell>{reservation.email}</TableCell>
-              <TableCell>{reservation.visiteDate.toDateString()}</TableCell>
+              <TableCell>{new Date(reservation.visitDate).toLocaleDateString ()}</TableCell>
               <TableCell>
                 {reservation.status.status}
               </TableCell>

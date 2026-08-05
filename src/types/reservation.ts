@@ -26,6 +26,6 @@ export type LastReservation = {
   id: number;
   company: string;
   email: string;
-  visiteDate: Date;
+  visitDate: Date;
   status: Status
 }
