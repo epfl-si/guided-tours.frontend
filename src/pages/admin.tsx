@@ -22,8 +22,9 @@ export default function Admin() {
   }
 
   return (
-    <>
+    <div className="flex-1 overflow-y-auto p-16">
+      <h1 className="text-4xl pb-8 font-semibold">Admin dashboard</h1>
       <LastReservationsTable lastReservations={reservations}/>
-    </>
+    </div>
   )
 }
